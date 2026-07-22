@@ -14,6 +14,7 @@ import {
   AlertCircle,
   Loader2,
 } from 'lucide-react'
+import { BASE_URL } from '../lib/api'
 
 // ─── Left Panel ────────────────────────────────────────────────────────────────
 function LeftPanel() {
@@ -178,7 +179,7 @@ function RegisterForm({ role, onBack }) {
     setError('')
 
     try {
-      const res = await fetch('http://localhost:8080/api/auth/signup', {
+      const res = await fetch(`${BASE_URL}/api/auth/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...form, role }),

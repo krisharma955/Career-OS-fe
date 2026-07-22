@@ -9,7 +9,7 @@ import {
   Tag, GitBranch, Calendar, Eye, EyeOff, Sparkles,
   Building2, Search, Filter, Download, RefreshCw,
 } from 'lucide-react'
-import { apiFetch } from '../lib/api'
+import { apiFetch, BASE_URL } from '../lib/api'
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 const STATUS_CONFIG = {
@@ -450,13 +450,20 @@ function JobCard({ job, onApply, hasApplied }) {
         <div className="w-11 h-11 rounded-2xl bg-linear-to-br from-cyan-50 to-sky-100 text-cyan-700 flex items-center justify-center font-bold text-base border border-cyan-100 shrink-0">
           {job.companyName?.charAt(0)}
         </div>
-        <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full ${
-          job.jobType === 'INTERNSHIP' ? 'bg-purple-50 text-purple-600' :
-          job.jobType === 'REMOTE' ? 'bg-teal-50 text-teal-600' :
-          'bg-gray-100 text-gray-500'
-        }`}>
-          {JOB_TYPE[job.jobType]}
-        </span>
+        <div className="flex gap-2">
+          {job.jobPostingStatus === 'CLOSE' && (
+            <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-red-50 text-red-600">
+              Closed
+            </span>
+          )}
+          <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full ${
+            job.jobType === 'INTERNSHIP' ? 'bg-purple-50 text-purple-600' :
+            job.jobType === 'REMOTE' ? 'bg-teal-50 text-teal-600' :
+            'bg-gray-100 text-gray-500'
+          }`}>
+            {JOB_TYPE[job.jobType]}
+          </span>
+        </div>
       </div>
 
       <h3 className="font-bold text-gray-900 text-sm mb-0.5 truncate">{job.title}</h3>
@@ -477,7 +484,11 @@ function JobCard({ job, onApply, hasApplied }) {
         </div>
       )}
 
-      {hasApplied ? (
+      {job.jobPostingStatus === 'CLOSE' ? (
+        <button disabled className="mt-auto w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-red-50 text-red-500 text-xs font-bold cursor-not-allowed">
+          Closed
+        </button>
+      ) : hasApplied ? (
         <button disabled className="mt-auto w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gray-100 text-gray-500 text-xs font-bold cursor-not-allowed">
           Already applied
         </button>
@@ -611,7 +622,7 @@ function ResumeTab() {
     const fd = new FormData(); fd.append('file', file)
     try {
       const token = localStorage.getItem('accessToken')
-      const res = await fetch('http://localhost:8080/api/resume/upload', {
+      const res = await fetch(`${BASE_URL}/api/resume/upload`, {
         method: 'POST', headers: { Authorization: `Bearer ${token}` }, body: fd,
       })
       if (!res.ok) throw new Error('Upload failed')
@@ -1030,7 +1041,7 @@ export default function StudentDashboard() {
     return job?.id
   }).filter(Boolean))
 
-  const newJobsList = jobs.filter(j => !appliedJobIds.has(j.id))
+  const newJobsList = jobs.filter(j => !appliedJobIds.has(j.id) && j.jobPostingStatus === 'OPEN')
 
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden">

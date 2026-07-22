@@ -265,7 +265,7 @@ function DashboardTab({ profile, jobs, applications, onNavigate }) {
 }
 
 // ─── Jobs Tab ─────────────────────────────────────────────────────────────────
-function MiniJobCard({ job }) {
+function MiniJobCard({ job, onCloseJob }) {
   const salary = job.minSalary && job.maxSalary
     ? `₹${(job.minSalary / 100000).toFixed(1)}L–${(job.maxSalary / 100000).toFixed(1)}L`
     : 'Not disclosed'
@@ -289,11 +289,19 @@ function MiniJobCard({ job }) {
         <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{job.location || 'Remote'}</span>
         <span className="flex items-center gap-1"><DollarSign className="w-3 h-3" />{salary}</span>
       </div>
+      {job.jobPostingStatus === 'OPEN' && onCloseJob && (
+        <button
+          onClick={(e) => { e.stopPropagation(); onCloseJob(job.id); }}
+          className="mt-4 w-full py-2 bg-red-50 hover:bg-red-100 text-red-600 font-semibold text-xs rounded-lg transition-colors border border-red-100"
+        >
+          Close Job
+        </button>
+      )}
     </div>
   )
 }
 
-function JobsTab({ jobs, onJobPosted }) {
+function JobsTab({ jobs, onJobPosted, onCloseJob }) {
   const [search, setSearch] = useState('')
   const [filter, setFilter] = useState('ALL')
   const [isPosting, setIsPosting] = useState(false)
@@ -454,7 +462,7 @@ function JobsTab({ jobs, onJobPosted }) {
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filtered.map(job => (
-          <MiniJobCard key={job.id} job={job} />
+          <MiniJobCard key={job.id} job={job} onCloseJob={onCloseJob} />
         ))}
         {filtered.length === 0 && (
           <div className="col-span-full py-20 text-center bg-white rounded-3xl border border-gray-100 border-dashed">
@@ -884,6 +892,20 @@ export default function CompanyDashboard() {
     }).finally(() => setLoading(false))
   }, [navigate])
 
+  const handleCloseJob = async (jobId) => {
+    if (!window.confirm("Are you sure you want to close this job posting? Candidates will no longer be able to apply.")) return;
+    try {
+      const res = await apiFetch(`/api/jobs/${jobId}/status`, {
+        method: 'PATCH',
+        body: JSON.stringify({ jobPostingStatus: 'CLOSE' })
+      });
+      setJobs(jobs.map(j => j.id === jobId ? res : j));
+    } catch (err) {
+      console.error(err);
+      alert("Failed to close job posting");
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -906,7 +928,7 @@ export default function CompanyDashboard() {
 
         <main className="flex-1 overflow-y-auto relative">
           {active === 'dashboard'    && <DashboardTab profile={profile} applications={applications} jobs={jobs} onNavigate={setActive} />}
-          {active === 'jobs'         && <JobsTab jobs={jobs} onJobPosted={(job) => setJobs(prev => [job, ...prev])} />}
+          {active === 'jobs'         && <JobsTab jobs={jobs} onJobPosted={(job) => setJobs(prev => [job, ...prev])} onCloseJob={handleCloseJob} />}
           {active === 'applications' && <ApplicationsTab applications={applications} />}
           {active === 'profile'      && <ProfileTab profile={profile} />}
         </main>

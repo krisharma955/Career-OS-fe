@@ -12,6 +12,7 @@ import {
   AlertCircle,
   Loader2,
 } from 'lucide-react'
+import { BASE_URL } from '../lib/api'
 
 // ─── Left Panel (shared with Signup) ───────────────────────────────────────────
 function LeftPanel() {
@@ -104,7 +105,7 @@ function LoginForm() {
     setError('')
 
     try {
-      const res = await fetch('http://localhost:8080/api/auth/login', {
+      const res = await fetch(`${BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
@@ -125,41 +126,13 @@ function LoginForm() {
       localStorage.setItem('userName', data.name)
       localStorage.setItem('userEmail', data.email)
 
-      // Redirect by role — students go to onboarding if profile not complete
+      // Redirect by role
       if (data.role === 'STUDENT') {
-        // Check if profile is complete via API
-        const profileRes = await fetch('http://localhost:8080/api/students/profile', {
-          headers: { Authorization: `Bearer ${data.accessToken}` }
-        }).catch(() => null)
-
-        if (profileRes && profileRes.ok) {
-          const profile = await profileRes.json()
-          if (profile.profileComplete === false || profile.profileComplete === null) {
-            navigate('/onboarding/student')
-          } else {
-            navigate('/dashboard/student')
-          }
-        } else {
-          // No profile yet — go to onboarding
-          navigate('/onboarding/student')
-        }
+        navigate('/dashboard/student')
       } else if (data.role === 'COMPANY') {
-        const companyRes = await fetch('http://localhost:8080/api/companies/profile', {
-          headers: { Authorization: `Bearer ${data.accessToken}` }
-        }).catch(() => null)
-
-        if (companyRes && companyRes.ok) {
-          const profile = await companyRes.json()
-          if (!profile.companyName || profile.companyName.trim() === '' || profile.companyName.endsWith('_PENDING_SETUP')) {
-            navigate('/onboarding/company')
-          } else {
-            navigate('/dashboard/company')
-          }
-        } else {
-          navigate('/onboarding/company')
-        }
+        navigate('/dashboard/company')
       } else if (data.role === 'ADMIN') {
-        navigate('/dashboard/admin')
+        navigate('/admin/dashboard')
       } else {
         navigate('/')
       }
