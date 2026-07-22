@@ -7,7 +7,7 @@ import {
   Star, Clock, TrendingUp, CheckCircle2, XCircle,
   Power, GraduationCap, Phone, BookOpen, BarChart2,
   Tag, GitBranch, Calendar, Eye, EyeOff, Sparkles,
-  Building2, Search, Filter, Download, RefreshCw,
+  Building2, Search, Filter, Download, RefreshCw, Menu,
 } from 'lucide-react'
 import { apiFetch, BASE_URL } from '../lib/api'
 
@@ -43,7 +43,7 @@ function StatusBadge({ status }) {
 }
 
 // ─── Sidebar ──────────────────────────────────────────────────────────────────
-function Sidebar({ active, setActive, newJobCount }) {
+function Sidebar({ active, setActive, newJobCount, mobileOpen, setMobileOpen }) {
   const navigate = useNavigate()
   const userName = localStorage.getItem('userName') || 'Student'
   const userEmail = localStorage.getItem('userEmail') || ''
@@ -55,7 +55,13 @@ function Sidebar({ active, setActive, newJobCount }) {
   }
 
   return (
-    <div className="flex h-screen sticky top-0 z-30 shrink-0 w-64 bg-[#134e5e] border-r border-[#0f3f4c] flex-col shadow-sm">
+    <>
+      {/* Mobile Overlay */}
+      {mobileOpen && (
+        <div className="fixed inset-0 bg-black/50 z-40 md:hidden" onClick={() => setMobileOpen(false)} />
+      )}
+      
+      <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-[#134e5e] border-r border-[#0f3f4c] flex-col shadow-sm transform transition-transform duration-300 md:relative md:translate-x-0 flex ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}`}>
       {/* Brand */}
       <div className="px-6 py-5 border-b border-cyan-800/50 flex items-center">
         <h1 className="text-3xl font-black text-white tracking-tight">Career<span className="italic text-cyan-300">OS</span></h1>
@@ -117,7 +123,8 @@ function Sidebar({ active, setActive, newJobCount }) {
           Logout
         </button>
       </div>
-    </div>
+      </div>
+    </>
   )
 }
 
@@ -188,13 +195,18 @@ function NotificationBell({ jobs, onNavigate }) {
   )
 }
 
-// ─── Page Header ──────────────────────────────────────────────────────────────
-function PageHeader({ title, subtitle, jobs, onNavigate }) {
+// ─── PageHeader ───────────────────────────────────────────────────────────────
+function PageHeader({ title, subtitle, jobs, onNavigate, onOpenMobileMenu }) {
   return (
-    <div className="flex items-center justify-between px-8 py-5 bg-white border-b border-gray-100 sticky top-0 z-20">
-      <div>
-        <h1 className="text-xl font-bold text-gray-900 tracking-tight">{title}</h1>
-        {subtitle && <p className="text-xs text-gray-400 mt-0.5">{subtitle}</p>}
+    <div className="flex items-center justify-between px-4 sm:px-8 py-5 bg-white border-b border-gray-100 sticky top-0 z-20">
+      <div className="flex items-center gap-3">
+        <button className="md:hidden p-2 -ml-2 text-gray-500 hover:bg-gray-100 rounded-lg" onClick={onOpenMobileMenu}>
+          <Menu className="w-5 h-5" />
+        </button>
+        <div>
+          <h1 className="text-xl font-bold text-gray-900 tracking-tight">{title}</h1>
+          {subtitle && <p className="text-xs text-gray-400 mt-0.5 hidden sm:block">{subtitle}</p>}
+        </div>
       </div>
       <NotificationBell jobs={jobs} onNavigate={onNavigate} />
     </div>
@@ -215,7 +227,7 @@ function DashboardTab({ profile, applications, jobs, onNavigate }) {
   ]
 
   return (
-    <div className="p-8 space-y-8">
+    <div className="p-4 sm:p-8 space-y-8">
       {/* Greeting */}
       <div className="flex items-center justify-between">
         <div>
@@ -231,7 +243,7 @@ function DashboardTab({ profile, applications, jobs, onNavigate }) {
       </div>
 
       {/* Stat cards */}
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         {stats.map(({ label, value, icon: Icon, color, bg }) => (
           <div key={label} className="bg-white rounded-2xl border border-gray-100 p-5 hover:shadow-md hover:border-gray-200 transition-all duration-200">
             <div className={`w-9 h-9 rounded-xl ${bg} flex items-center justify-center mb-4`}>
@@ -244,7 +256,7 @@ function DashboardTab({ profile, applications, jobs, onNavigate }) {
       </div>
 
       {/* Two columns */}
-      <div className="grid xl:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         {/* Recent Applications */}
         <div className="bg-white rounded-2xl border border-gray-100">
           <div className="flex items-center justify-between px-6 py-4 border-b border-gray-50">
@@ -684,7 +696,7 @@ function ResumeTab() {
           </label>
         )}
 
-        <div className="flex gap-3">
+        <div className="flex flex-col sm:flex-row gap-3">
           <label className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold cursor-pointer transition-all ${
             uploading ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-cyan-600 text-white hover:bg-cyan-700'
           }`}>
@@ -987,8 +999,9 @@ export default function StudentDashboard() {
   const [profile, setProfile] = useState(null)
   const [applications, setApplications] = useState([])
   const [jobs, setJobs] = useState([])
-  const [loading, setLoading] = useState(true)
   const [applyError, setApplyError] = useState('')
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   const PAGE_META = {
     dashboard:    { title: 'Dashboard',       subtitle: 'Your placement activity overview'      },
@@ -1045,10 +1058,10 @@ export default function StudentDashboard() {
 
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden">
-      <Sidebar active={active} setActive={setActive} newJobCount={newJobsList.length} />
+      <Sidebar active={active} setActive={setActive} newJobCount={newJobsList.length} mobileOpen={mobileMenuOpen} setMobileOpen={setMobileMenuOpen} />
 
       <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
-        <PageHeader title={title} subtitle={subtitle} jobs={newJobsList} onNavigate={setActive} />
+        <PageHeader title={title} subtitle={subtitle} jobs={newJobsList} onNavigate={setActive} onOpenMobileMenu={() => setMobileMenuOpen(true)} />
 
         {/* Apply error toast */}
         {applyError && (

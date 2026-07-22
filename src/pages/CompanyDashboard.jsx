@@ -42,7 +42,7 @@ function StatusBadge({ status }) {
 }
 
 // ─── Sidebar ──────────────────────────────────────────────────────────────────
-function Sidebar({ active, setActive }) {
+function Sidebar({ active, setActive, mobileOpen, setMobileOpen }) {
   const navigate = useNavigate()
   const userName = localStorage.getItem('userName') || 'Company'
   const userEmail = localStorage.getItem('userEmail') || ''
@@ -54,7 +54,13 @@ function Sidebar({ active, setActive }) {
   }
 
   return (
-    <div className="flex h-screen sticky top-0 z-30 shrink-0 w-64 bg-[#134e5e] border-r border-[#0f3f4c] flex-col shadow-sm">
+    <>
+      {/* Mobile Overlay */}
+      {mobileOpen && (
+        <div className="fixed inset-0 bg-black/50 z-40 md:hidden" onClick={() => setMobileOpen(false)} />
+      )}
+      
+      <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-[#134e5e] border-r border-[#0f3f4c] flex-col shadow-sm transform transition-transform duration-300 md:relative md:translate-x-0 flex ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}`}>
       {/* Brand */}
       <div className="px-6 py-5 border-b border-cyan-800/50 flex items-center">
         <h1 className="text-3xl font-black text-white tracking-tight">Career<span className="italic text-cyan-300">OS</span></h1>
@@ -111,7 +117,8 @@ function Sidebar({ active, setActive }) {
           Logout
         </button>
       </div>
-    </div>
+      </div>
+    </>
   )
 }
 
@@ -176,12 +183,19 @@ function NotificationBell({ applications, onNavigate }) {
 }
 
 // ─── Page Header ──────────────────────────────────────────────────────────────
-function PageHeader({ title, subtitle, applications, onNavigate }) {
+function PageHeader({ title, subtitle, applications, onNavigate, onOpenMobileMenu }) {
   return (
-    <div className="flex items-center justify-between px-8 py-5 bg-white border-b border-gray-100 sticky top-0 z-20 shrink-0">
-      <div>
-        <h1 className="text-xl font-bold text-gray-900 tracking-tight">{title}</h1>
-        {subtitle && <p className="text-xs font-medium text-gray-400 mt-0.5">{subtitle}</p>}
+    <div className="flex items-center justify-between px-4 sm:px-8 py-5 bg-white border-b border-gray-100 sticky top-0 z-20 shrink-0">
+      <div className="flex items-center gap-3">
+        <button className="md:hidden p-2 -ml-2 text-gray-500 hover:bg-gray-100 rounded-lg" onClick={onOpenMobileMenu}>
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        <div>
+          <h1 className="text-xl font-bold text-gray-900 tracking-tight">{title}</h1>
+          {subtitle && <p className="text-xs font-medium text-gray-400 mt-0.5 hidden sm:block">{subtitle}</p>}
+        </div>
       </div>
       <NotificationBell applications={applications} onNavigate={onNavigate} />
     </div>
@@ -200,7 +214,7 @@ function DashboardTab({ profile, jobs, applications, onNavigate }) {
   ]
 
   return (
-    <div className="p-8 space-y-8 w-full max-w-[1200px] mx-auto">
+    <div className="p-4 sm:p-8 space-y-8 w-full max-w-[1200px] mx-auto">
       {/* Greeting */}
       <div className="flex items-center justify-between">
         <div>
@@ -241,7 +255,7 @@ function DashboardTab({ profile, jobs, applications, onNavigate }) {
         ) : (
           <div className="space-y-4">
             {applications.slice(0, 5).map(app => (
-              <div key={app.id} className="flex items-center justify-between p-5 rounded-2xl border border-gray-100 hover:border-cyan-200 hover:shadow-[0_4px_20px_-8px_rgba(6,182,212,0.15)] bg-gray-50 hover:bg-white transition-all group">
+              <div key={app.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-5 rounded-2xl border border-gray-100 hover:border-cyan-200 hover:shadow-[0_4px_20px_-8px_rgba(6,182,212,0.15)] bg-gray-50 hover:bg-white transition-all group gap-4">
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-xl bg-cyan-100 text-cyan-700 flex items-center justify-center font-bold text-lg">
                     {app.studentName.charAt(0)}
@@ -863,6 +877,7 @@ export default function CompanyDashboard() {
   const [applications, setApplications] = useState([])
   const [jobs, setJobs] = useState([])
   const [loading, setLoading] = useState(true)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const PAGE_META = {
     dashboard:    { title: 'Dashboard',       subtitle: 'Your recruitment overview'      },
@@ -921,10 +936,10 @@ export default function CompanyDashboard() {
 
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden">
-      <Sidebar active={active} setActive={setActive} />
+      <Sidebar active={active} setActive={setActive} mobileOpen={mobileMenuOpen} setMobileOpen={setMobileMenuOpen} />
 
       <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
-        <PageHeader title={title} subtitle={subtitle} applications={applications} onNavigate={setActive} />
+        <PageHeader title={title} subtitle={subtitle} applications={applications} onNavigate={setActive} onOpenMobileMenu={() => setMobileMenuOpen(true)} />
 
         <main className="flex-1 overflow-y-auto relative">
           {active === 'dashboard'    && <DashboardTab profile={profile} applications={applications} jobs={jobs} onNavigate={setActive} />}

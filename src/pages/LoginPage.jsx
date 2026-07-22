@@ -260,9 +260,9 @@ function LoginForm() {
 // ─── Page ──────────────────────────────────────────────────────────────────────
 export default function LoginPage() {
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex flex-col md:flex-row">
       {/* Left: Branding panel */}
-      <div className="w-[45%] shrink-0">
+      <div className="hidden md:block md:w-[45%] shrink-0">
         <LeftPanel />
       </div>
 
