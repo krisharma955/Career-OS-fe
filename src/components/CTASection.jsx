@@ -1,4 +1,5 @@
-import { ArrowRight, Briefcase } from 'lucide-react'
+import { ArrowRight, Sparkles } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 const GithubIcon = () => (
   <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
@@ -73,13 +74,13 @@ export default function CTASection() {
               Sign up as a student, or company. Get your AI resume score in under a minute. Start applying to real jobs today.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <a
-                href="#"
+              <Link
+                to="/signup"
                 className="group flex items-center gap-2 px-8 py-3.5 rounded-full bg-gray-100 text-cyan-700 font-bold text-sm shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
               >
                 Create your account
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </a>
+              </Link>
               <a
                 href="https://github.com/krisharma955"
                 target="_blank"

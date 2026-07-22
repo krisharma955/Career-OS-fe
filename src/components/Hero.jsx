@@ -1,4 +1,5 @@
 import { ArrowRight, Play } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function Hero() {
   return (
@@ -32,13 +33,13 @@ export default function Hero() {
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <a
-            href="/signup"
+          <Link
+            to="/signup"
             className="group flex items-center gap-2 px-7 py-3.5 rounded-full bg-cyan-600 text-white font-semibold text-base hover:bg-cyan-700 hover:shadow-cyan-500/40 transition-all duration-300"
           >
             Get started free
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-          </a>
+          </Link>
           <a
             href="#how"
             className="flex items-center gap-2 px-7 py-3.5 rounded-full bg-white/70 backdrop-blur-sm text-gray-800 font-semibold text-base border border-white/80 hover:bg-white/90 transition-all duration-300 shadow-md"

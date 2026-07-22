@@ -1,4 +1,5 @@
 import { Briefcase, ArrowRight } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 const navLinks = [
   { label: 'Why Career-OS', href: '#why' },
@@ -40,13 +41,13 @@ export default function Footer() {
                 AI-powered campus placement management. Built for students who want offers, and companies who want talent — not paperwork.
               </p>
 
-              <a
-                href="#"
+              <Link
+                to="/signup"
                 className="group inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-cyan-600 text-white text-sm font-semibold hover:bg-cyan-700 hover:shadow-cyan-300 transition-all duration-300"
               >
                 Get started free
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-              </a>
+              </Link>
             </div>
 
             {/* Nav links */}
