@@ -21,8 +21,8 @@ const featureCards = [
     title: 'AI ATS Scoring Engine',
     description:
       'Upload your PDF resume. Our GPT-5 powered engine scores it across skills, experience, education, and formatting — then tells you exactly what keywords you\'re missing.',
-    color: 'bg-violet-50 text-violet-600',
-    border: 'border-violet-100',
+    color: 'bg-cyan-50 text-cyan-600',
+    border: 'border-cyan-100',
   },
   {
     icon: <FileText className="w-5 h-5" />,

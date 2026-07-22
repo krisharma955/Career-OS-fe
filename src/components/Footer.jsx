@@ -3,7 +3,6 @@ import { Briefcase, ArrowRight } from 'lucide-react'
 const navLinks = [
   { label: 'Why Career-OS', href: '#why' },
   { label: 'How It Works', href: '#how' },
-  { label: 'Features', href: '#features' },
   { label: 'For You', href: '#for-you' },
   { label: 'FAQ', href: '#faq' },
 ]
@@ -43,7 +42,7 @@ export default function Footer() {
 
               <a
                 href="#"
-                className="group inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-cyan-600 text-white text-sm font-semibold shadow-lg shadow-cyan-200 hover:bg-cyan-700 hover:shadow-cyan-300 transition-all duration-300"
+                className="group inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-cyan-600 text-white text-sm font-semibold hover:bg-cyan-700 hover:shadow-cyan-300 transition-all duration-300"
               >
                 Get started free
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
@@ -74,7 +73,7 @@ export default function Footer() {
         {/* Bottom bar inside card area */}
         <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-2 px-2">
           <p className="text-xs text-gray-400">
-            © 2026 CareerOS. Developed by <span className='font-bold'>Krish Sharma.</span>
+            © 2026 Career<span className='italic text-cyan-500'>OS</span>. Developed by <span className='font-bold'>Krish Sharma.</span>
           </p>
           <p className="text-xs text-gray-400 italic">
             Made for students who want offers, not just applications.

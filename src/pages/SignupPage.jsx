@@ -31,7 +31,7 @@ function LeftPanel() {
         className="absolute inset-0 opacity-20"
         style={{
           backgroundImage:
-            'radial-gradient(circle at 20% 50%, rgba(139,92,246,0.6) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(99,102,241,0.4) 0%, transparent 40%)',
+            'radial-gradient(circle at 20% 50%, rgba(8,145,178,0.6) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(20,184,166,0.4) 0%, transparent 40%)',
         }}
       />
       {/* Subtle grid pattern */}
@@ -191,14 +191,20 @@ function RegisterForm({ role, onBack }) {
         return
       }
 
-      // Store tokens
+      // Store auth data
       localStorage.setItem('accessToken', data.accessToken)
       localStorage.setItem('refreshToken', data.refreshToken)
       localStorage.setItem('userRole', data.role)
       localStorage.setItem('userName', data.name)
+      localStorage.setItem('userEmail', data.email)
 
-      // Redirect based on role
-      navigate(role === 'STUDENT' ? '/dashboard/student' : '/dashboard/company')
+      if (role === 'STUDENT') {
+        // First signup — always go to onboarding to fill profile details
+        localStorage.setItem('profileComplete', 'false')
+        navigate('/onboarding/student')
+      } else {
+        navigate('/onboarding/company')
+      }
     } catch (err) {
       setError('Unable to connect to server. Please try again later.')
     } finally {

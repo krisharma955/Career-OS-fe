@@ -48,7 +48,7 @@ export default function WhySection() {
         </div>
 
         {/* Founder quote-style block */}
-        <div className="p-8 md:p-10 rounded-3xl bg-violet-50/60 border border-violet-100">
+        <div className="p-8 md:p-10 rounded-3xl bg-cyan-50/60 border border-cyan-100">
           <p className="text-xl md:text-2xl font-bold text-gray-900 mb-4 leading-snug">
             I built Career-OS because campus hiring is broken. Companies post jobs with no transparency. Students apply with no feedback. And AI resume tools give you a score but not a path forward.
           </p>

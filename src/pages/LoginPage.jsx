@@ -29,7 +29,7 @@ function LeftPanel() {
         className="absolute inset-0 opacity-20"
         style={{
           backgroundImage:
-            'radial-gradient(circle at 20% 50%, rgba(139,92,246,0.6) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(99,102,241,0.4) 0%, transparent 40%)',
+            'radial-gradient(circle at 20% 50%, rgba(8,145,178,0.6) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(20,184,166,0.4) 0%, transparent 40%)',
         }}
       />
       {/* Grid pattern */}
@@ -118,16 +118,51 @@ function LoginForm() {
       }
 
       // Store auth data
+      localStorage.removeItem('demoMode') // ensure demo mode is disabled for real logins
       localStorage.setItem('accessToken', data.accessToken)
       localStorage.setItem('refreshToken', data.refreshToken)
       localStorage.setItem('userRole', data.role)
       localStorage.setItem('userName', data.name)
+      localStorage.setItem('userEmail', data.email)
 
-      // Redirect by role
-      if (data.role === 'STUDENT') navigate('/dashboard/student')
-      else if (data.role === 'COMPANY') navigate('/dashboard/company')
-      else if (data.role === 'ADMIN') navigate('/dashboard/admin')
-      else navigate('/')
+      // Redirect by role — students go to onboarding if profile not complete
+      if (data.role === 'STUDENT') {
+        // Check if profile is complete via API
+        const profileRes = await fetch('http://localhost:8080/api/students/profile', {
+          headers: { Authorization: `Bearer ${data.accessToken}` }
+        }).catch(() => null)
+
+        if (profileRes && profileRes.ok) {
+          const profile = await profileRes.json()
+          if (profile.profileComplete === false || profile.profileComplete === null) {
+            navigate('/onboarding/student')
+          } else {
+            navigate('/dashboard/student')
+          }
+        } else {
+          // No profile yet — go to onboarding
+          navigate('/onboarding/student')
+        }
+      } else if (data.role === 'COMPANY') {
+        const companyRes = await fetch('http://localhost:8080/api/companies/profile', {
+          headers: { Authorization: `Bearer ${data.accessToken}` }
+        }).catch(() => null)
+
+        if (companyRes && companyRes.ok) {
+          const profile = await companyRes.json()
+          if (!profile.companyName || profile.companyName.trim() === '' || profile.companyName.endsWith('_PENDING_SETUP')) {
+            navigate('/onboarding/company')
+          } else {
+            navigate('/dashboard/company')
+          }
+        } else {
+          navigate('/onboarding/company')
+        }
+      } else if (data.role === 'ADMIN') {
+        navigate('/dashboard/admin')
+      } else {
+        navigate('/')
+      }
     } catch (err) {
       setError('Unable to connect to server. Please try again later.')
     } finally {
@@ -174,7 +209,7 @@ function LoginForm() {
             required
             placeholder="you@example.com"
             autoComplete="email"
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:border-violet-400 focus:bg-white focus:ring-3 focus:ring-violet-100 transition-all duration-200"
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:border-cyan-400 focus:bg-white focus:ring-3 focus:ring-cyan-100 transition-all duration-200"
           />
         </div>
 
@@ -234,14 +269,9 @@ function LoginForm() {
         </button>
       </form>
 
-      {/* Divider */}
-      <div className="flex items-center gap-3 my-6">
-        <div className="flex-1 h-px bg-gray-100" />
-        <span className="text-xs text-gray-400">or</span>
-        <div className="flex-1 h-px bg-gray-100" />
-      </div>
 
-      <p className="text-center text-sm text-gray-500">
+
+      <p className="mt-8 text-center text-sm text-gray-500">
         Don't have an account?{' '}
         <Link
           to="/signup"

@@ -8,7 +8,7 @@ const GithubIcon = () => (
 
 const roles = [
   { label: 'Student', color: 'bg-teal-100 text-teal-700', desc: 'Build your profile, upload resume, apply to jobs, track applications, and get AI feedback.' },
-  { label: 'Company', color: 'bg-violet-100 text-violet-700', desc: 'Post jobs with requirements, review applications, shortlist candidates, and hire.' },
+  { label: 'Company', color: 'bg-cyan-100 text-cyan-700', desc: 'Post jobs with requirements, review applications, shortlist candidates, and hire.' },
   { label: 'Admin', color: 'bg-cyan-100 text-cyan-700', desc: 'Verify companies, manage users, and oversee the full platform.' },
 ]
 
@@ -45,7 +45,7 @@ export default function CTASection() {
             { value: 'GPT-5', label: 'AI Model', color: 'text-sky-600' },
             { value: '5MB', label: 'Resume Cap', color: 'text-teal-600' },
             { value: '5', label: 'ATS Score Dimensions', color: 'text-emerald-500' },
-            { value: 'Secured', label: 'Application Lifecycle', color: 'text-violet-500' },
+            { value: 'Secured', label: 'Application Lifecycle', color: 'text-cyan-500' },
           ].map(stat => (
             <div key={stat.label} className="p-5 rounded-2xl bg-gray-50 border border-gray-100 text-center">
               <p className={`text-2xl font-black mb-1 ${stat.color}`}>{stat.value}</p>
