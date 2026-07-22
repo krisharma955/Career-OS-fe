@@ -148,7 +148,7 @@ function LoginForm() {
 
       <h1 className="text-3xl font-black text-gray-900 mb-1">Welcome back</h1>
       <p className="text-sm text-gray-500 mb-8">
-        Sign in to your Career-OS account to continue.
+        Sign in to your Career<span className='italic text-cyan-500'>OS</span> account to continue.
       </p>
 
       {/* Error alert */}
