@@ -59,7 +59,7 @@ export default function WhySection() {
             <div className="w-10 h-10 rounded-full bg-linear-to-br from-cyan-600 to-cyan-700 flex items-center justify-center text-white font-bold text-sm">K</div>
             <div>
               <p className="font-semibold text-gray-900 text-sm">Krish Sharma</p>
-              <p className="text-xs text-gray-400">Creator, Career-OS</p>
+              <p className="text-xs text-gray-400">Creator, Career<span className="italic">OS</span></p>
             </div>
           </div>
         </div>

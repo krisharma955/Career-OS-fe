@@ -51,13 +51,13 @@ export default function Navbar() {
         {/* CTA */}
         <div className="hidden md:flex items-center gap-3">
           <a
-            href="#"
+            href="http://localhost:5173/login"
             className="text-sm font-bold text-gray-600 hover:text-cyan-600 transition-colors"
           >
             Sign In
           </a>
           <a
-            href="#"
+            href="http://localhost:5173/signup"
             className="px-4 py-2 rounded-full bg-cyan-600 text-white text-sm font-semibold hover:bg-cyan-700 transition-all duration-200 shadow-md hover:shadow-cyan-300"
           >
             Get Started

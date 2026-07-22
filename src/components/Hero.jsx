@@ -29,10 +29,10 @@ export default function Hero() {
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <a
-            href="#"
+            href="http://localhost:5173/signup"
             className="group flex items-center gap-2 px-7 py-3.5 rounded-full bg-cyan-600 text-white font-bold text-base hover:bg-cyan-700 hover:shadow-cyan-500/40 transition-all duration-300"
           >
-            Get started free
+            Get Started
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </a>
           <a

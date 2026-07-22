@@ -8,7 +8,7 @@ const faqs = [
   },
   {
     q: 'How does the AI resume scoring work?',
-    a: 'You upload your PDF resume (up to 5MB). Our backend uses Apache PDFBox to extract the text, then sends it to GPT-4o-mini via OpenRouter. The AI scores your resume across five dimensions — overall, skills, experience, education, and formatting — and returns missing keywords, strengths, and specific suggestions to improve your score.',
+    a: 'You upload your PDF resume (up to 5MB). Our backend uses Apache PDFBox to extract the text, then sends it to GPT-5 via OpenRouter. The AI scores your resume across five dimensions — overall, skills, experience, education, and formatting — and returns missing keywords, strengths, and specific suggestions to improve your score.',
   },
   {
     q: 'What roles does Career-OS support?',
