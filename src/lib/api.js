@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://localhost:8080'|| 'https://career-os-be-rc1l.onrender.com'
+export const BASE_URL = 'https://career-os-be-rc1l.onrender.com'
 
 export function getToken() {
   return localStorage.getItem('accessToken')
